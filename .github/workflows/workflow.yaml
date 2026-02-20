@@ -1,0 +1,34 @@
+name: Deploy to EC2
+
+on: 
+    push:
+        branches:
+          - main
+
+jobs:
+    deploy:
+        runs-on: self-hosted
+        steps:
+          - name: checkout code
+            uses: actions/checkout@v4
+          - name: build image
+            run: docker build -t horizon-club .
+          - name: save image
+            run: docker save horizon-club | gzip > horizon-club.tar.gz
+          - name: Write SSH key
+            run: |
+                echo "${{secrets.EC2_SSH_KEY}}" > key.pem
+                chmod 600 key.pem
+          - name: Copy image to EC2-APP
+            run: |
+                scp -o StrictHostKeyChecking=no -i key.pem horizon-club.tar.gz \
+                    ec2-user@${{ secrets.EC2_APP_IP }}:/home/ec2-user
+
+          - name: Load & run container on EC2-APP
+            run: |
+                ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_APP_IP }} '
+                gunzip -c /home/ec2-user/horizon-club.tar.gz | docker load
+                docker rm -f web || true
+                docker run -d --name web -p 80:80 -p 443:443 horizon-club
+                docker ps
+                '

@@ -71,6 +71,11 @@ To reduce cloud costs:
 ## Running the Project Locally
 To run the website locally:
 
+## Infrastructure Status
+AWS EC2 instances used in this project are not kept running continuously
+in order to control costs. The environment is fully documented and reproducible.
+
+
 ```bash
-git clone https://github.com/your-username/horizon-club.git
-cd horizon-club
+git clone https://github.com/hichem-tiba-77/Horizon-club-website-new.git
+

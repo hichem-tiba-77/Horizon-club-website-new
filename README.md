@@ -73,7 +73,7 @@ To run the website locally:
 
 ## Infrastructure Status
 AWS EC2 instances used in this project are not kept running continuously
-in order to control costs. The environment is fully documented and reproducible.
+in order to control costs. The environment is fully documented and reproducible
 
 
 ```bash
